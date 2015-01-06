@@ -1,3 +1,3 @@
 $(document).ready(function() {
-    $('.template').richText();
+    $('#template').dynamicTemplate();
 });

@@ -729,16 +729,53 @@
             rotate: rotate,
             getTranslate: getTranslate
         };
-    })(),
-    dt = {
-        templates: {
-            t1: [
-                ['text']
-            ]
-        },
-        createTemplate: function (elem, opt) {
-
-        }
+    })();
+    $.createTemplate = function (me, opt) {
+        var dt = {
+            version: '0.1',
+            obj: {
+                $me: $(me),
+                $container: null
+            },
+            cons: {
+                col: 12
+            },
+            cl: {
+                container: 'container',
+                row: 'row',
+                col: opt.col || 'col-md-'
+            },
+            templates: {
+                t1: [
+                    ['text']
+                ]
+            },
+            func:{
+                init: function () {
+                    dt.func.createContainer();
+                    dt.func.createRows();
+                },
+                createContainer: function () {
+                    dt.obj.$container = $('<div></div>').addClass(dt.cl.container).appendTo(dt.obj.$me);
+                },
+                createRows: function () {
+                    var template = dt.templates[opt.template], i = 0, j, ln = template.length, $row, $col, col, colCount, colSize;
+                    for (;i<ln;i++) {
+                        col = template[i];
+                        colCount = col.length;
+                        colSize = parseInt(dt.cons.col/colCount);
+                        $row = $('<div></div>').addClass(dt.cl.row);
+                        for (j = 0;j<colCount;j++) {
+                            $col = $('<div></div>').addClass(dt.cl.col + colSize).richText();
+                            $col.appendTo($row);
+                        }
+                        $row.appendTo(dt.obj.$container);
+                    }
+                }
+            },
+            evnt:{}
+        };
+        dt.func.init();
     };
 
     $.fn.extend({
@@ -763,7 +800,7 @@
                 template: 't1'
             },options);
             this.each(function () {
-                new dt.createTemplate(this, settings);    // creating object for all elements
+                new $.createTemplate(this, options);    // creating object for all elements
             });
             return this;
         }

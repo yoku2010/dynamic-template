@@ -2,8 +2,16 @@
     position: relative;
     outline: none;
     min-height: 50px;
+    padding: 10px;
+    border-radius: 4px;
 }
-
+.rich-text-popup.editor[contenteditable]:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) inset;
+}
+.rich-text-popup.editor[contenteditable]:focus {
+    background: #FAFAFA;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) inset;
+}
 .rich-text-popup.editor p {
     z-index: 2;
     position: relative;
