@@ -747,7 +747,14 @@
             },
             templates: {
                 t1: [
-                    ['text']
+                    [['text',12]]
+                ],
+                t2: [
+                    [['image',12]],
+                    [['text',12]]
+                ],
+                t3: [
+                    [['image',4], ['text',8]]
                 ]
             },
             func:{
@@ -759,14 +766,19 @@
                     dt.obj.$container = $('<div></div>').addClass(dt.cl.container).appendTo(dt.obj.$me);
                 },
                 createRows: function () {
-                    var template = dt.templates[opt.template], i = 0, j, ln = template.length, $row, $col, col, colCount, colSize;
+                    var template = dt.templates[opt.template], i = 0, j, ln = template.length, $row, $col, col, colCount;
                     for (;i<ln;i++) {
                         col = template[i];
                         colCount = col.length;
-                        colSize = parseInt(dt.cons.col/colCount);
                         $row = $('<div></div>').addClass(dt.cl.row);
                         for (j = 0;j<colCount;j++) {
-                            $col = $('<div></div>').addClass(dt.cl.col + colSize).richText();
+                            $col = $('<div></div>').addClass(dt.cl.col + col[j][1]);
+                            if (col[j][0] == 'text') {
+                                $col.richText();
+                            }
+                            else if (col[j][0] == 'image') {
+                                $col.richImage();
+                            }
                             $col.appendTo($row);
                         }
                         $row.appendTo(dt.obj.$container);
@@ -776,7 +788,65 @@
             evnt:{}
         };
         dt.func.init();
-    };
+    }
+    $.createImage = function (me, opt) {
+        var ri = {
+            version: '0.1',
+            obj: {
+                $me: $(me)
+            },
+            cl: {
+                main: 'rich-img',
+                imgBtn: 'img-btn',
+                toolbar: 'rich-img-toolbar',
+                noImgText: 'no-img-text'
+            },
+            func:{
+                init: function () {
+                    ri.func.prepare();
+                },
+                prepare: function () {
+                    ri.obj.$me.addClass(ri.cl.main);
+                    ri.func.noImageMsg().appendTo(ri.obj.$me);
+                    ri.func.imageToolbar().appendTo(ri.obj.$me);
+                },
+                noImageMsg: function () {
+                    return $('<p></p>').addClass(ri.cl.noImgText).text(opt.noImageText);
+                },
+                imageToolbar: function () {
+                    var $div = $('<div></div>').addClass(ri.cl.toolbar);
+                    ri.func.chooseImgBtn().appendTo($div);
+                    ri.func.settingImgBtn().appendTo($div);
+                    return $div;
+                },
+                chooseImgBtn: function () {
+                    var $div = $('<div></div>').addClass(ri.cl.imgBtn).attr('title', 'Choose Image');
+                    $('<i></i>').addClass('fa fa-image fa-1').appendTo($div);
+                    $div.click(function(e) {
+                        ri.evnt.chooseImage(e, this);
+                    });
+                    return $div;
+                },
+                settingImgBtn: function () {
+                    var $div = $('<div></div>').addClass(ri.cl.imgBtn).attr('title', 'Settings Image');
+                    $('<i></i>').addClass('fa fa-gear fa-1').appendTo($div);
+                    $div.click(function(e) {
+                        ri.evnt.settingImage(e, this);
+                    });
+                    return $div;
+                }
+            },
+            evnt:{
+                chooseImage: function (event, me) {
+                    alert('choose image');
+                },
+                settingImage: function (event, me) {
+                    alert('setting image');
+                }
+            }
+        };
+        ri.func.init();
+    }
 
     $.fn.extend({
         // rich text editor
@@ -794,10 +864,19 @@
             });
             return this;
         },
+        richImage: function (options) {
+            options = $.extend({
+                noImageText: 'Choose an Image to bring your template to life'
+            }, options);
+            this.each(function () {
+                new $.createImage(this, options);       // creating object for all elements
+            });
+            return this;
+        },
         // dynamic template
         dynamicTemplate: function (options) {
             options = $.extend({
-                template: 't1'
+                template: 't2'
             },options);
             this.each(function () {
                 new $.createTemplate(this, options);    // creating object for all elements

@@ -3,14 +3,12 @@
     outline: none;
     min-height: 50px;
     padding: 10px;
-    border-radius: 4px;
 }
 .rich-text-popup.editor[contenteditable]:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) inset;
+    border-top: 1px solid #FAFAFA;
 }
 .rich-text-popup.editor[contenteditable]:focus {
-    background: #FAFAFA;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) inset;
+    border-top: 1px solid #EAEAEA;
 }
 .rich-text-popup.editor p {
     z-index: 2;
@@ -29,7 +27,7 @@
     margin-top: 0;
 }
 
-.rich-text-popup.bubble {
+.rich-text-popup.bubble, .dt-toolbar {
     position: absolute;
     z-index: 3;
     opacity: 1;
@@ -168,4 +166,52 @@
     color:#fff;
     font-size: 14px;
     float: left;
+}
+
+.rich-img {
+    position: relative;
+    background: #FAFAFA;
+    border-top: 1px solid #EEE;
+    display: block;
+    min-height: 150px;
+    height: 100%;
+    margin-bottom: 20px;
+}
+.rich-img .rich-img-toolbar {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+.rich-img .img-btn {
+    display: inline-block;
+    overflow: hidden;
+    margin: 5px;
+    cursor: pointer;
+    color: #AAA;
+}
+.rich-img .img-btn:hover {
+    color: #333;
+}
+.rich-img .no-img-text {
+    text-align: center;
+    padding-top: 60px;
+    color: #888;
+}
+.fa-1 {
+  font-size: 1em;
+}
+.fa-2 {
+  font-size: 2em;
+}
+.fa-3 {
+  font-size: 4em;
+}
+.fa-4 {
+  font-size: 7em;
+}
+.fa-5 {
+  font-size: 12em;
+}
+.fa-6 {
+  font-size: 20em;
 }
