@@ -743,46 +743,125 @@
             cl: {
                 container: 'container',
                 row: 'row',
-                col: opt.col || 'col-md-'
+                col: opt.col || 'col-md-',
+                toolbar: 'dt-toolbar'
             },
             templates: {
-                t1: [
-                    [['text',12]]
-                ],
-                t2: [
-                    [['image',12]],
-                    [['text',12]]
-                ],
-                t3: [
-                    [['image',4], ['text',8]]
-                ]
+                t1: {
+                    name: 'Template 1',
+                    template: [
+                        [['text',12]]
+                    ]
+                },
+                t2: {
+                    name: 'Template 1',
+                    template: [
+                        [['image',12]],
+                        [['text',12]]
+                    ]
+                },
+                t3: {
+                    name: 'Template 1',
+                    template: [
+                        [['image',4], ['text',8]]
+                    ]
+                }
             },
             func:{
                 init: function () {
                     dt.func.createContainer();
+                    dt.func.createToolbar();
                     dt.func.createRows();
                 },
                 createContainer: function () {
                     dt.obj.$container = $('<div></div>').addClass(dt.cl.container).appendTo(dt.obj.$me);
                 },
                 createRows: function () {
-                    var template = dt.templates[opt.template], i = 0, j, ln = template.length, $row, $col, col, colCount;
+                    var template = dt.templates[opt.template].template, i = 0, j, ln = template.length, $row, $col, col, colCount, $div;
                     for (;i<ln;i++) {
                         col = template[i];
                         colCount = col.length;
                         $row = $('<div></div>').addClass(dt.cl.row);
                         for (j = 0;j<colCount;j++) {
                             $col = $('<div></div>').addClass(dt.cl.col + col[j][1]);
+                            $div = $('<div></div>');
                             if (col[j][0] == 'text') {
-                                $col.richText();
+                                $div.richText();
                             }
                             else if (col[j][0] == 'image') {
-                                $col.richImage();
+                                $div.richImage();
                             }
+                            $div.appendTo($col);
                             $col.appendTo($row);
                         }
                         $row.appendTo(dt.obj.$container);
                     }
+                },
+                createToolbar: function () {
+                    var $row = $('<div></div>').addClass(dt.cl.row),
+                    $col = $('<div></div>').addClass(dt.cl.col + '12'),
+                    $div = $('<div></div>').addClass(dt.cl.toolbar);
+                    dt.func.addToolbarBtn($div);
+                    $div.appendTo($col.appendTo($row.appendTo(dt.obj.$container)));
+                },
+                addToolbarBtn: function ($div) {
+                    var $ul = $('<ul></ul>'), $li, $btn;
+
+                    // themes
+                    $li = $('<li></li>');
+                    $btn = $('<button></button>').attr('title', 'Change Template').click(function(e) {
+                        alert('themes');
+                    });
+                    $('<i></i>').addClass('fa fa-tumblr').appendTo($btn);
+                    $btn.appendTo($li);
+                    $li.appendTo($ul);
+
+                    // add
+                    $li = $('<li></li>');
+                    $btn = $('<button></button>').attr('title', 'Add More').click(function(e) {
+                        alert('add');
+                    });
+                    $('<i></i>').addClass('fa fa-plus').appendTo($btn);
+                    $btn.appendTo($li);
+                    $li.appendTo($ul);
+
+                    // edit
+                    $li = $('<li></li>');
+                    $btn = $('<button></button>').attr('title', 'Edit').click(function(e) {
+                        alert('edit');
+                    });
+                    $('<i></i>').addClass('fa fa-pencil').appendTo($btn);
+                    $btn.appendTo($li);
+                    $li.appendTo($ul);
+
+                    // delete
+                    $li = $('<li></li>');
+                    $btn = $('<button></button>').attr('title', 'Delete').click(function(e) {
+                        alert('delete');
+                    });
+                    $('<i></i>').addClass('fa fa-close').appendTo($btn);
+                    $btn.appendTo($li);
+                    $li.appendTo($ul);
+
+                    // save
+                    $li = $('<li></li>');
+                    $btn = $('<button></button>').attr('title', 'Save').click(function(e) {
+                        alert('save');
+                    });
+                    $('<i></i>').addClass('fa fa-save').appendTo($btn);
+                    $btn.appendTo($li);
+                    $li.appendTo($ul);
+
+                    // preview
+                    $li = $('<li></li>');
+                    $btn = $('<button></button>').attr('title', 'Preview').click(function(e) {
+                        alert('preview');
+                    });
+                    $('<i></i>').addClass('fa fa-eye').appendTo($btn);
+                    $btn.appendTo($li);
+                    $li.appendTo($ul);
+
+                    $ul.appendTo($div);
                 }
             },
             evnt:{}

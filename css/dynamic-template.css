@@ -27,11 +27,11 @@
     margin-top: 0;
 }
 
-.rich-text-popup.bubble, .dt-toolbar {
+.rich-text-popup.bubble{
     position: absolute;
     z-index: 3;
-    opacity: 1;
     height: 43px;
+    opacity: 1;
     left: 0;
     top: 0;
     opacity: 0;
@@ -49,7 +49,24 @@
     transition: 0.15s ease-in-out;
     -webkit-transition: 0.15s ease-in-out;
 }
-
+.dt-toolbar {
+    margin-bottom: 10px;
+    text-align: right;
+    height: 43px;
+    border-radius: 5px;
+    border: 1px solid #1C1C1B;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 0 2px rgba(255,255,255,0.2); /* Bubble Shadows */
+    background: rgb(55,55,53);
+    background: -moz-linear-gradient(top,  rgba(55,55,53,1) 0%, rgba(40,40,39,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(55,55,53,1)), color-stop(100%,rgba(40,40,39,1)));
+    background: -webkit-linear-gradient(top,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    background: -o-linear-gradient(top,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    background: -ms-linear-gradient(top,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    background: linear-gradient(to bottom,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#373735', endColorstr='#282827',GradientType=0 );
+    transition: 0.15s ease-in-out;
+    -webkit-transition: 0.15s ease-in-out;
+}
 .rich-text-popup.bubble.active {
     opacity: 1;
 }
@@ -77,17 +94,17 @@
     box-shadow: 2px 2px 1px rgba(0,0,0,0.1); /* Triangle shadow */
 }
 
-.rich-text-popup.bubble ul {
+.rich-text-popup.bubble ul, .dt-toolbar ul {
     padding: 0;
     margin: 0;
     list-style: none;
 }
 
-.rich-text-popup.bubble ul li {
+.rich-text-popup.bubble ul li, .dt-toolbar ul li{
     display: inline;
 }
 
-.rich-text-popup.bubble button {
+.rich-text-popup.bubble button, .dt-toolbar button {
     outline: none;
     border: none;
     background: transparent;
@@ -100,7 +117,17 @@
     -webkit-font-smoothing: antialiased;
 }
 
-.rich-text-popup.bubble button.active {
+.dt-toolbar button:hover i{
+    color: #60D778;
+}
+.dt-toolbar button:active i{
+    color: #60D778;
+}
+.dt-toolbar button.disabled i{
+    color: #AAA;
+}
+
+.rich-text-popup.bubble button.active, .dt-toolbar button.active {
     color: #60D778;
 }
 
