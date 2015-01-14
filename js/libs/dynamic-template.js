@@ -737,6 +737,9 @@
                 $me: $(me),
                 $container: null
             },
+            id: {
+                templateBtn : 'template_menu'
+            },
             cons: {
                 col: 12
             },
@@ -754,14 +757,14 @@
                     ]
                 },
                 t2: {
-                    name: 'Template 1',
+                    name: 'Template 2',
                     template: [
                         [['image',12]],
                         [['text',12]]
                     ]
                 },
                 t3: {
-                    name: 'Template 1',
+                    name: 'Template 3',
                     template: [
                         [['image',4], ['text',8]]
                     ]
@@ -808,11 +811,14 @@
                     var $ul = $('<ul></ul>'), $li, $btn;
 
                     // themes
-                    $li = $('<li></li>');
-                    $btn = $('<button></button>').attr('title', 'Change Template').click(function(e) {
-                        alert('themes');
+                    $li = $('<li></li>').addClass('dropdown');
+                    $btn = $('<button></button>').attr({
+                        title: 'Change Template',
+                        id: dt.id.templateBtn,
+                        'data-toggle':'dropdown'
                     });
                     $('<i></i>').addClass('fa fa-tumblr').appendTo($btn);
+                    dt.func.templateDropdown().appendTo($li);
                     $btn.appendTo($li);
                     $li.appendTo($ul);
 
@@ -862,6 +868,26 @@
                     $li.appendTo($ul);
 
                     $ul.appendTo($div);
+                },
+                templateDropdown: function() {
+                    var $ul = $('<ul></ul>').addClass('dropdown-menu').attr({
+                        'role': 'menu',
+                        'aria-labelledby': dt.id.templateBtn,
+
+                    }), $li, $a , tmp;
+
+                    for (tmp in dt.templates) {
+                        $li = $('<li></li>').attr('role', 'presentation')
+                        $a = $('<a></a>').attr({
+                            role: 'menuitem',
+                            tabindex: '-1',
+                            href:'#'
+                        }).html(dt.templates[tmp].name);
+                        $a.appendTo($li);
+                        $li.appendTo($ul);
+                    };
+                    //var html = '<a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Action</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Another action</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Something else here</a></li><li role="presentation" class="divider"></li><li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Separated link</a>';
+                    return $ul;
                 }
             },
             evnt:{}
