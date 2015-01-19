@@ -3,6 +3,7 @@
     outline: none;
     min-height: 50px;
     padding: 10px;
+    border-top: 1px solid #FFF;
 }
 .rich-text-popup.editor[contenteditable]:hover {
     border-top: 1px solid #FAFAFA;
@@ -116,7 +117,6 @@
     cursor: pointer;
     -webkit-font-smoothing: antialiased;
 }
-
 .dt-toolbar button:hover i{
     color: #60D778;
 }
@@ -223,6 +223,38 @@
     text-align: center;
     padding-top: 60px;
     color: #888;
+}
+.preview-text {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.preview-rich-img {
+    background: transparent;
+    border-top: 1px solid transparent;
+}
+.preview-rich-img .rich-img-toolbar {
+    display: none;
+}
+.preview-rich-img .no-img-text {
+    display: none;
+}
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:hover {
+    background: rgb(55,55,53);
+    background: -moz-linear-gradient(top,  rgba(55,55,53,1) 0%, rgba(40,40,39,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(55,55,53,1)), color-stop(100%,rgba(40,40,39,1)));
+    background: -webkit-linear-gradient(top,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    background: -o-linear-gradient(top,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    background: -ms-linear-gradient(top,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    background: linear-gradient(to bottom,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#373735', endColorstr='#282827',GradientType=0 );
+}
+.fixed-bar {
+    position: fixed;
+    right: 0px;
 }
 .fa-1 {
   font-size: 1em;
