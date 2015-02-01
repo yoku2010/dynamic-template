@@ -6,7 +6,7 @@
     border-top: 1px solid #FFF;
 }
 .rich-text-popup.editor[contenteditable]:hover {
-    border-top: 1px solid #FAFAFA;
+    border-top: 1px solid #EEE;
 }
 .rich-text-popup.editor[contenteditable]:focus {
     border-top: 1px solid #EAEAEA;
@@ -254,7 +254,38 @@
 }
 .fixed-bar {
     position: fixed;
-    right: 0px;
+    right: -5px;
+}
+.template-container {
+    position: relative;
+}
+.template-container .template-option {
+    position: absolute;
+    top: 0px;
+    right: -30px;
+    height: auto;
+    border-radius: 3px;
+    display: none;
+}
+.template-container:hover .template-option {
+    display: block;
+}
+div.prev-template:hover .template-option {
+    display: none;
+}
+.template-container .template-option ul{
+    list-style: none;
+}
+.template-container .template-option ul li{
+    display: block;
+}
+.template-container .template-option ul button{
+    margin-bottom: -1px;
+    width: 27px;
+    height: 27px;
+}
+.center-text {
+    text-align: center;
 }
 .fa-1 {
   font-size: 1em;
