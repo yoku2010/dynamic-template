@@ -746,6 +746,7 @@
                 $upBtn: null,
                 $downBtn: null,
                 $noTemplateMsg: null,
+                $templateDropdown: null,
                 $template: $(),
                 $allRichText: $(),
                 $allRichImage: $()
@@ -771,90 +772,143 @@
                 t1: {
                     name: 'Template 1',
                     template: [
-                        [['text',12]]
+                        [
+                            {
+                                type: 'text',
+                                html: null,
+                                col: 12
+                            }
+                        ]
                     ],
                     addMore: false
                 },
                 t2: {
                     name: 'Template 2',
                     template: [
-                        [['image',12]],
-                        [['text',12]]
+                        [
+                            {
+                                type: 'image',
+                                path: null,
+                                col: 12
+                            },
+                            {
+                                type: 'text',
+                                html: null,
+                                col: 12
+                            }
+                        ]
                     ],
                     addMore: false
                 },
                 t3: {
                     name: 'Template 3',
                     template: [
-                        [['image',4], ['text',8]]
+                        [
+                            {
+                                type: 'image',
+                                path: null,
+                                col: 4,
+                            },
+                            {
+                                type: 'text',
+                                html: null,
+                                col: 8
+                            }
+                        ]
                     ],
                     addMore: true
                 }
             },
             func:{
                 init: function () {
+                    opt.data = opt.data || [];
                     dt.func.createContainer();
                     dt.func.createToolbar();
-                    dt.func.createRow();
+                    dt.func.createRows();
                 },
                 createContainer: function () {
                     dt.obj.$container = $('<div></div>').addClass(dt.cl.container).appendTo(dt.obj.$me);
                 },
-                createRow: function () {
+                createRows: function () {
+                    var msg = null;
                     if (dt.templates.hasOwnProperty(opt.template)) {
-                        var template = dt.templates[opt.template].template, i = 0, j, ln = template.length, $template, $row, $col, col, colCount, $div;
-
-                        // Set no template exit message null
-                        dt.obj.$noTemplateMsg = null;
-
-                        $template = $('<div></div>').addClass(dt.cl.template);
-                        // create rich text or image
-                        for (;i<ln;i++) {
-                            col = template[i];
-                            colCount = col.length;
-                            $row = $('<div></div>').addClass(dt.cl.row);
-                            for (j = 0;j<colCount;j++) {
-                                $col = $('<div></div>').addClass(dt.cl.col + col[j][1]);
-                                $div = $('<div></div>');
-                                if (col[j][0] == 'text') {
-                                    $div.richText();
-                                    dt.obj.$allRichText = dt.obj.$allRichText.add($div);
-                                }
-                                else if (col[j][0] == 'image') {
-                                    $div.richImage();
-                                    dt.obj.$allRichImage = dt.obj.$allRichImage.add($div);
-                                }
-                                $div.appendTo($col);
-                                $col.appendTo($row);
-                            }
-                            $row.appendTo($template);
+                        if (opt.recreate) {
+                            opt.data = dt.templates[opt.template].template;
                         }
-                        // add template options to move and delete template
-                        dt.func.templateOption().appendTo($template);
-
-                        // disable and enable add button
-                        if (dt.templates[opt.template].addMore){
-                            dt.obj.$addBtn.removeAttr('disabled').removeClass('disabled');
-                            dt.obj.$upBtn.removeAttr('disabled').removeClass('disabled');
-                            dt.obj.$downBtn.removeAttr('disabled').removeClass('disabled');
+                        var i = 0, l = opt.data.length;
+                        if (l > 0) {
+                            for (; i < l; i++) {
+                                dt.func.createRow(i);
+                            }
                         }
                         else {
-                            dt.obj.$addBtn.attr('disabled', 'disabled').addClass('disabled');
-                            dt.obj.$upBtn.attr('disabled', 'disabled').addClass('disabled');
-                            dt.obj.$downBtn.attr('disabled', 'disabled').addClass('disabled');
+                            msg = 'Template data doesn\'t exist, Please choose a template then store template data';
+                            dt.obj.$templateDropdown.find('>li.active').removeClass('active');
+                            opt.template = null;
                         }
-
-                        // append template into dom
-                        $template.appendTo(dt.obj.$container);
-                        dt.obj.$template = dt.obj.$template.add($template);
-                        dt.count++;
                     }
                     else {
+                        msg = 'No template selected, Please choose a template.';
+                    }
+                    if (null !== msg) {
                         var $row = $('<div></div>'), $col = $('<div></div>');
                         dt.obj.$addBtn.attr('disabled', 'disabled').addClass('disabled');
-                        dt.obj.$noTemplateMsg = $('<p></p>').addClass('center-text').text('No template selected, Please choose a template.').appendTo($col.appendTo($row));
+                        dt.obj.$noTemplateMsg = $('<p></p>').addClass('center-text').text(msg).appendTo($col.appendTo($row));
                         $row.appendTo(dt.obj.$container);
                     }
+                },
+                createRow: function (ind) {
+                    var template = opt.data[ind], i = 0, j, ln = template.length, $template, $row, $col, col, colCount, $div;
+                    // Set no template exit message null
+                    dt.obj.$noTemplateMsg = null;
+                    
+                    $template = $('<div></div>').addClass(dt.cl.template);
+                    // create rich text or image
+                    
+                    col = template;
+                    colCount = col.length;
+                    $row = $('<div></div>').addClass(dt.cl.row);
+                    for (j = 0;j<colCount;j++) {
+                        $col = $('<div></div>').addClass(dt.cl.col + col[j]['col']);
+                        $div = $('<div></div>');
+                        if (col[j]['type'] == 'text') {
+                            $div.data('index',j);
+                            $div.html(col[j]['html']);
+                            $div.richText();
+                            dt.obj.$allRichText = dt.obj.$allRichText.add($div);
+                        }
+                        else if (col[j]['type'] == 'image') {
+                            $div.data('index',j);
+                            $div.richImage($.extend({
+                                images: opt.images
+                            },col[j]));
+                            dt.obj.$allRichImage = dt.obj.$allRichImage.add($div);
+                        }
+                        $div.appendTo($col);
+                        $col.appendTo($row);
+                    }
+                    $row.appendTo($template);
+                    
+                    // add template options to move and delete template
+                    dt.func.templateOption().appendTo($template);
+
+                    // disable and enable add button
+                    if (dt.templates[opt.template].addMore){
+                        dt.obj.$addBtn.removeAttr('disabled').removeClass('disabled');
+                        dt.obj.$upBtn.removeAttr('disabled').removeClass('disabled');
+                        dt.obj.$downBtn.removeAttr('disabled').removeClass('disabled');
+                    }
+                    else {
+                        dt.obj.$addBtn.attr('disabled', 'disabled').addClass('disabled');
+                        dt.obj.$upBtn.attr('disabled', 'disabled').addClass('disabled');
+                        dt.obj.$downBtn.attr('disabled', 'disabled').addClass('disabled');
+                    }
+
+                    // append template into dom
+                    $template.data('dt', template);
+                    $template.appendTo(dt.obj.$container);
+                    dt.obj.$template = dt.obj.$template.add($template);
+                    dt.count++;
                 },
                 createToolbar: function () {
                     var $row = $('<div></div>').addClass(dt.cl.row),
@@ -930,7 +984,7 @@
                     // save
                     $li = $('<li></li>');
                     $btn = $('<button></button>').attr('title', 'Save').click(function(e) {
-                        alert('save');
+                        dt.evnt.saveData(e, this);
                     });
                     $('<i></i>').addClass('fa fa-save').appendTo($btn);
                     $btn.appendTo($li);
@@ -978,12 +1032,13 @@
                         $a.appendTo($li);
                         $li.appendTo($ul);
                     };
-                    //var html = '<a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Action</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Another action</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Something else here</a></li><li role="presentation" class="divider"></li><li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Separated link</a>';
+                    dt.obj.$templateDropdown = $ul;
                     return $ul;
                 },
                 destroyTemplate: function () {
                     dt.obj.$me.empty();
                     dt.count = 0;
+                    //opt.data = [];
                 },
                 previewRichImage: function () {
                     dt.obj.$allRichImage.addClass(dt.cl.previewRichImage)
@@ -1023,25 +1078,28 @@
                 },
                 moveUp: function ($me) {
                     if (dt.count > 0) {
-                        var $current = $me.parents('.template-container'),
-                        $prev = $current.prev('.template-container');
+                        var $current = $me.parents('.' + dt.cl.template),
+                        $prev = $current.prev('.' + dt.cl.template);
                         $prev && $current.insertBefore($prev);
                     }
                 },
                 moveDown: function ($me) {
                     if (dt.count > 0) {
-                        var $current = $me.parents('.template-container'),
-                        $next = $current.next('.template-container');
+                        var $current = $me.parents('.' + dt.cl.template),
+                        $next = $current.next('.' + dt.cl.template);
                         $next && $current.insertAfter($next);
                     }
                 },
                 destroyRow: function ($me) {
-                    var $current = $me.parents('.template-container');
+                    var $current = $me.parents('.' + dt.cl.template);
                     $current && $current.remove();
                     dt.count--;
                     if (dt.count == 0) {
                         opt.template = null;
-                        dt.func.createRow();
+                        opt.recreate = false;
+                        dt.obj.$templateDropdown.find('>li.active').removeClass('active');
+                        opt.data = [];
+                        dt.func.createRows();
                     }
                 }
             },
@@ -1051,11 +1109,13 @@
                     var template = $(me).data('template');
                     dt.func.destroyTemplate();
                     dt.obj.$me.dynamicTemplate($.extend(opt, {
-                        template: template
+                        template: template,
+                        recreate: true
                     }));
                 },
                 addMore: function (e, me) {
-                    dt.func.createRow();
+                    opt.data.push($.extend(true, [], dt.templates[opt.template].template[0]));
+                    dt.func.createRow(opt.data.length - 1);
                 },
                 previewTemplate: function (e, me) {
                     dt.func.previewRichImage();
@@ -1075,6 +1135,19 @@
                 },
                 deleteTemplate: function (e, me) {
                     dt.func.destroyRow($(me));
+                },
+                saveData: function (e, me) {
+                    var $allTemplate = dt.obj.$me.find('.' + dt.cl.template), i =0 , ln = $allTemplate.length, data = [], 
+                        $currentTemplate, $richText, $richTextClone;
+                    for (; i < ln; i++) {
+                        $currentTemplate = $allTemplate.eq(i);
+                        data[i] = $currentTemplate.data('dt');
+                        $richText = $currentTemplate.find('.rich-text-popup');
+                        $richTextClone = $richText.clone();
+                        $richTextClone.find('p').removeAttr('contenteditable');
+                        data[i][$richText.data('index')].html = $richTextClone.html();
+                    }
+                    console.log(data);
                 }
             }
         };
@@ -1084,21 +1157,39 @@
         var ri = {
             version: '0.1',
             obj: {
-                $me: $(me)
+                $me: $(me),
+                $image: null
             },
             cl: {
                 main: 'rich-img',
                 imgBtn: 'img-btn',
                 toolbar: 'rich-img-toolbar',
-                noImgText: 'no-img-text'
+                noImgText: 'no-img-text',
+                img: 'image'
             },
             func:{
                 init: function () {
                     ri.func.prepare();
                 },
                 prepare: function () {
-                    ri.obj.$me.addClass(ri.cl.main);
-                    ri.func.noImageMsg().appendTo(ri.obj.$me);
+                    ri.obj.$me.addClass(ri.cl.main).resizable({
+                        handles: 's',
+                        start: function(e, ui) {
+                            //alert('resizing started');
+                        },
+                        resize: function(e, ui) {
+
+                        },
+                        stop: function(e, ui) {
+                            //alert('resizing stopped');
+                        }
+                    });
+                    if (opt.path) {
+                        ri.func.imageContainer().appendTo(ri.obj.$me);
+                    }
+                    else {
+                        ri.func.noImageMsg().appendTo(ri.obj.$me);
+                    }
                     ri.func.imageToolbar().appendTo(ri.obj.$me);
                 },
                 noImageMsg: function () {
@@ -1107,7 +1198,6 @@
                 imageToolbar: function () {
                     var $div = $('<div></div>').addClass(ri.cl.toolbar);
                     ri.func.chooseImgBtn().appendTo($div);
-                    ri.func.settingImgBtn().appendTo($div);
                     return $div;
                 },
                 chooseImgBtn: function () {
@@ -1118,21 +1208,23 @@
                     });
                     return $div;
                 },
-                settingImgBtn: function () {
-                    var $div = $('<div></div>').addClass(ri.cl.imgBtn).attr('title', 'Settings Image');
-                    $('<i></i>').addClass('fa fa-gear fa-1').appendTo($div);
-                    $div.click(function(e) {
-                        ri.evnt.settingImage(e, this);
-                    });
-                    return $div;
+                imageContainer: function () {
+                    var $img = $('<img/>').attr({'src': opt.path}).addClass(ri.cl.img).css({
+                        'top': opt.x,
+                        'left': opt.y,
+                        'height': opt.height,
+                        'width': opt.width
+                    }).draggable();
+                    ri.obj.$image = $img;
+                    return $img;
+                },
+                createImageContainer: function() {
+                    alert('ggg');
                 }
             },
             evnt:{
-                chooseImage: function (event, me) {
-                    alert('choose image');
-                },
-                settingImage: function (event, me) {
-                    alert('setting image');
+                chooseImage: function (e, me) {
+                    ri.func.createImageContainer();
                 }
             }
         };
@@ -1157,7 +1249,13 @@
         },
         richImage: function (options) {
             options = $.extend({
-                noImageText: 'Choose an Image to bring your template to life'
+                noImageText: 'Choose an Image to bring your template to life',
+                images: [],
+                path: null,
+                x: 0,
+                y: 0,
+                width: '100%',
+                height: 'auto'
             }, options);
             this.each(function () {
                 new $.createImage(this, options);       // creating object for all elements
@@ -1167,7 +1265,48 @@
         // dynamic template
         dynamicTemplate: function (options) {
             options = $.extend({
-                //template: 't2'
+                template: 't2',
+                images: [
+                    {
+                        name: 'Motivation Quate',
+                        path: 'img/img-1.jpg'
+                    },
+                    {
+                        name: 'Twilite',
+                        path: 'img/img-2.jpg'
+                    },
+                    {
+                        name: 'Motivation Quate 2',
+                        path: 'img/img-1.jpg'
+                    },
+                    {
+                        name: 'Twilite 2',
+                        path: 'img/img-2.jpg'
+                    },
+                    {
+                        name: 'Motivation Quate3',
+                        path: 'img/img-1.jpg'
+                    },
+                    {
+                        name: 'Twilite 3',
+                        path: 'img/img-2.jpg'
+                    }
+                ],
+                recreate: false,
+                data:[
+                    [
+                        {
+                            type: 'image',
+                            path: 'img/img-1.jpg',
+                            col: 12
+                        },
+                        {
+                            type: 'text',
+                            html: '<h1>Yogesh Kumar</h1><p>Gurgaon</p><p>Pin: 122001</p>',
+                            col: 12
+                        }
+                    ]
+                ]
             },options);
             this.each(function () {
                 new $.createTemplate(this, options);    // creating object for all elements

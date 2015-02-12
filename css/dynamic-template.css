@@ -200,9 +200,9 @@
     background: #FAFAFA;
     border-top: 1px solid #EEE;
     display: block;
-    min-height: 150px;
-    height: 100%;
+    height: 150px;
     margin-bottom: 20px;
+    overflow: hidden;
 }
 .rich-img .rich-img-toolbar {
     position: absolute;
@@ -223,6 +223,9 @@
     text-align: center;
     padding-top: 60px;
     color: #888;
+}
+.rich-img .image {
+    position: absolute;
 }
 .preview-text {
     -webkit-touch-callout: none;
