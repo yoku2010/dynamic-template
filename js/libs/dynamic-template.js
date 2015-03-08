@@ -858,7 +858,7 @@
                     }
                 },
                 createRow: function (ind) {
-                    var template = opt.data[ind], i = 0, j, ln = template.length, $template, $row, $col, col, colCount, $div;
+                    var template = $.extend(true, [], opt.data[ind]), i = 0, j, ln = template.length, $template, $row, $col, col, colCount, $div;
                     // Set no template exit message null
                     dt.obj.$noTemplateMsg = null;
                     
