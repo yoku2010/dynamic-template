@@ -1144,6 +1144,7 @@
                         data[i] = $currentTemplate.data('dt');
                         $richText = $currentTemplate.find('.rich-text-popup');
                         $richTextClone = $richText.clone();
+                        $richTextClone.find('p.placeholder').remove();
                         $richTextClone.find('p').removeAttr('contenteditable');
                         data[i][$richText.data('index')].html = $richTextClone.html();
                     }
@@ -1158,14 +1159,26 @@
             version: '0.1',
             obj: {
                 $me: $(me),
-                $image: null
+                $image: null,
+                $toolbar: null,
+                $chooseImage: null,
+                $sBox: $(),
+                $selectBtn: null
             },
             cl: {
                 main: 'rich-img',
                 imgBtn: 'img-btn',
                 toolbar: 'rich-img-toolbar',
                 noImgText: 'no-img-text',
+                chooseImage: 'choose-img',
+                chooseImageBox: 'choose-img-box',
+                chooseImageSBox: 'choose-img-sbox',
+                selectImageSBox: 'select',
+                chooseImageBtn: 'choose-img-btn',
                 img: 'image'
+            },
+            val: {
+                selectedImage: null
             },
             func:{
                 init: function () {
@@ -1193,11 +1206,14 @@
                     ri.func.imageToolbar().appendTo(ri.obj.$me);
                 },
                 noImageMsg: function () {
-                    return $('<p></p>').addClass(ri.cl.noImgText).text(opt.noImageText);
+                    var $div = $('<p></p>').addClass(ri.cl.noImgText).text(opt.noImageText);
+                    ri.obj.$image = $div;
+                    return $div;
                 },
                 imageToolbar: function () {
                     var $div = $('<div></div>').addClass(ri.cl.toolbar);
                     ri.func.chooseImgBtn().appendTo($div);
+                    ri.obj.$toolbar = $div;
                     return $div;
                 },
                 chooseImgBtn: function () {
@@ -1219,12 +1235,74 @@
                     return $img;
                 },
                 createImageContainer: function() {
-                    alert('ggg');
+                    var $div = $('<div></div>'), $p, $box, $sBox, i = 0, ln = opt.images.length;
+                    $div.addClass(ri.cl.chooseImage);
+
+                    // body of the choose image
+                    $box = $('<div></div>').addClass(ri.cl.chooseImageBox);
+                    ri.obj.$sBox = $();
+                    for (; i < ln; i++) {
+                        $sBox = $('<div></div>').addClass(ri.cl.chooseImageSBox).data('path', opt.images[i].path);
+                        $('<img/>').attr('src',opt.images[i].path).appendTo($('<div></div>').appendTo($sBox));
+                        $('<p></p>').text(opt.images[i].name).appendTo($sBox);
+                        ri.obj.$sBox = ri.obj.$sBox.add($sBox);
+                        $sBox.click(function(e) {
+                            ri.evnt.clickOnImage(e, this);
+                        }).appendTo($box);
+                    }
+                    $box.appendTo($div);
+
+                    // footer of the choose image
+                    $p = $('<p></p>').addClass(ri.cl.chooseImageBtn);
+                    ri.obj.$selectBtn = $('<button></button>').addClass('btn btn-success disabled').attr('disabled', 'disabled').text('Select').click(function(e) {
+                        ri.evnt.selectChooseImage(e, this);
+                    }).appendTo($p);
+                    $('<button></button>').addClass('btn  btn-default').text('Cancel').click(function(e) {
+                        ri.evnt.cancelChooseImage(e, this);
+                    }).appendTo($p);
+                    $p.appendTo($div);
+                    ri.obj.$chooseImage = $div;
+                    $div.insertAfter(ri.obj.$me.parents('div.row'));
                 }
             },
             evnt:{
                 chooseImage: function (e, me) {
+                    ri.val.selectedImage = null;
                     ri.func.createImageContainer();
+                    ri.obj.$me.parents('div.row').hide();
+                },
+                cancelChooseImage: function (e, me) {
+                    ri.obj.$chooseImage.remove();
+                    ri.obj.$me.parents('div.row').show();
+                },
+                selectChooseImage: function (e, me) {
+                    // select choose image code
+                    var ind = ri.obj.$me.data('index'), data = ri.obj.$me.parents('.template-container').data('dt'), $p;
+                    if (ind != void 0 && data != void 0) {
+                        data[ind].path = ri.val.selectedImage;
+
+                        if ('p' == ri.obj.$image.prop('tagName').toLowerCase()) {
+                            $p = ri.obj.$image;
+                            opt.path = ri.val.selectedImage;
+                            ri.func.imageContainer().insertAfter($p);
+                            $p.remove();
+                        }
+                        else {
+                            ri.obj.$image.attr('src', ri.val.selectedImage);
+                        }
+                        ri.evnt.cancelChooseImage(e, me);
+                    }
+                    else {
+                        alert('Error in data, please contact Administrator');
+                    }
+                    
+                },
+                clickOnImage: function (e, me) {
+                    var $me = $(me);
+                    ri.obj.$sBox.removeClass(ri.cl.selectImageSBox);
+                    $me.addClass(ri.cl.selectImageSBox);
+                    ri.val.selectedImage = $me.data('path');
+                    ri.obj.$selectBtn.removeClass('disabled').removeAttr('disabled');
                 }
             }
         };

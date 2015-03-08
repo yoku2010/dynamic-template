@@ -287,6 +287,62 @@ div.prev-template:hover .template-option {
     width: 27px;
     height: 27px;
 }
+.choose-img-btn {
+    overflow: hidden;
+    text-align: right;
+    background: #DADADA;
+    border: 1px solid #BBB;
+}
+.choose-img-btn button {
+    margin: 5px 5px 5px 0px;
+}
+.choose-img-box {
+    overflow-y: scroll;
+    overflow-x: auto;
+    max-height: 300px;
+    border: 1px solid #CCC;
+    border-bottom: 0px none;
+    background: #EAEAEA;
+    padding: 5px;
+}
+.choose-img-sbox {
+    float: left;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    margin: 5px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #1C1C1B;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 0 2px rgba(255,255,255,0.2); /* Bubble Shadows */
+    background: rgb(55,55,53);
+    background: -moz-linear-gradient(top,  rgba(55,55,53,1) 0%, rgba(40,40,39,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(55,55,53,1)), color-stop(100%,rgba(40,40,39,1)));
+    background: -webkit-linear-gradient(top,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    background: -o-linear-gradient(top,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    background: -ms-linear-gradient(top,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    background: linear-gradient(to bottom,  rgba(55,55,53,1) 0%,rgba(40,40,39,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#373735', endColorstr='#282827',GradientType=0 );
+    transition: 0.15s ease-in-out;
+    -webkit-transition: 0.15s ease-in-out;
+    cursor: pointer;
+}
+.choose-img-sbox div {
+    margin: 5px;
+    overflow: hidden;
+    background: #282827;
+}
+.choose-img-sbox img {
+    height: 150px;
+}
+.choose-img-sbox p {
+    margin: 5px; 
+    color: #FFF;
+    overflow: hidden;
+}
+.choose-img-sbox.select p, .choose-img-sbox:hover p  {
+    color: #60D778;
+}
 .center-text {
     text-align: center;
 }
