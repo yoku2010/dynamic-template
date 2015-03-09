@@ -1239,7 +1239,13 @@
                     $div.addClass(ri.cl.chooseImage);
 
                     // body of the choose image
-                    $box = $('<div></div>').addClass(ri.cl.chooseImageBox);
+                    $box = $('<div></div>').addClass(ri.cl.chooseImageBox).bind( 'mousewheel DOMMouseScroll', function ( e ) {
+                        var e0 = e.originalEvent,
+                        delta = e0.wheelDelta || -e0.detail;
+
+                        this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+                        e.preventDefault();
+                    });
                     ri.obj.$sBox = $();
                     for (; i < ln; i++) {
                         $sBox = $('<div></div>').addClass(ri.cl.chooseImageSBox).data('path', opt.images[i].path);
