@@ -290,19 +290,19 @@ div.prev-template:hover .template-option {
 .choose-img-btn {
     overflow: hidden;
     text-align: right;
-    background: #DADADA;
-    border: 1px solid #BBB;
+    background: #373735;
+    border: 1px solid #1C1C1B;
 }
 .choose-img-btn button {
     margin: 5px 5px 5px 0px;
 }
 .choose-img-box {
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: auto;
     max-height: 300px;
-    border: 1px solid #CCC;
+    border: 1px solid #1C1C1B;
     border-bottom: 0px none;
-    background: #EAEAEA;
+    background: #282827;
     padding: 5px;
 }
 .choose-img-sbox {

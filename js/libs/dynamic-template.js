@@ -1225,14 +1225,18 @@
                     return $div;
                 },
                 imageContainer: function () {
-                    var $img = $('<img/>').attr({'src': opt.path}).addClass(ri.cl.img).css({
+                    var $div = $('<div></div>').css({
                         'top': opt.x,
                         'left': opt.y,
                         'height': opt.height,
                         'width': opt.width
-                    }).draggable();
-                    ri.obj.$image = $img;
-                    return $img;
+                    }).draggable().resizable();
+                    $('<img/>').css({
+                        'height': '100%',
+                        'width': '100%'
+                    }).attr({'src': opt.path}).addClass(ri.cl.img).appendTo($div);
+                    ri.obj.$image = $div;
+                    return $div;
                 },
                 createImageContainer: function() {
                     var $div = $('<div></div>'), $p, $box, $sBox, i = 0, ln = opt.images.length;
@@ -1294,7 +1298,7 @@
                             $p.remove();
                         }
                         else {
-                            ri.obj.$image.attr('src', ri.val.selectedImage);
+                            ri.obj.$image.find('img').attr('src', ri.val.selectedImage);
                         }
                         ri.evnt.cancelChooseImage(e, me);
                     }
@@ -1339,7 +1343,7 @@
                 x: 0,
                 y: 0,
                 width: '100%',
-                height: 'auto'
+                height: '100%'
             }, options);
             this.each(function () {
                 new $.createImage(this, options);       // creating object for all elements
